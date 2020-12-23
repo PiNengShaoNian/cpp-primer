@@ -46,7 +46,19 @@ StrVec::~StrVec()
     free();
 }
 
-void StrVec::push_back(const string &s)
+void StrVec::push_back(const string &s) &
+{
+    check_n_alloc();
+    alloc.construct(first_free++, s);
+}
+
+void StrVec::push_back(string &&s) &
+{
+    check_n_alloc();
+    alloc.construct(first_free++, std::move(s));
+}
+
+void StrVec::push_back(string &s) &&
 {
     check_n_alloc();
     alloc.construct(first_free++, s);
@@ -102,6 +114,73 @@ void StrVec::reallocate()
     elements = newData;
     first_free = dest;
     cap = elements + newCapacity;
+}
+
+bool operator==(const StrVec &v1, const StrVec &v2)
+{
+    if (v1.size() != v2.size())
+    {
+        return false;
+    }
+    bool result = true;
+
+    for (int i = 0; i < v1.size(); ++i)
+    {
+        if (*(v1.begin() + i) != *(v2.begin() + i))
+        {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+}
+bool operator!=(const StrVec &v1, const StrVec &v2)
+{
+    return !(v1 == v2);
+}
+
+bool operator>(const StrVec &v1, const StrVec &v2)
+{
+
+    bool result = true;
+
+    auto p1 = v1.begin();
+    auto p2 = v2.begin();
+
+    while (p1 != v1.end() && p2 != v2.end())
+    {
+        if (*p2 > *p1)
+        {
+            result = false;
+            break;
+        }
+        else if (*p1 > *p2)
+        {
+            result = true;
+            break;
+        }
+
+        ++p2;
+        ++p1;
+    }
+
+    if (p1 == v1.end() && p2 == v2.end())
+        return false;
+
+    return result;
+}
+bool operator<(const StrVec &v1, const StrVec &v2)
+{
+    return !(v1 > v2);
+}
+
+std::string *StrVec::operator[](StrVec::size_type index)
+{
+    if (index >= size() || index < 0)
+        throw out_of_range("invalid index");
+        
+    return begin() + index;
 }
 
 int main()

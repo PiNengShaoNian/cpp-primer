@@ -8,23 +8,31 @@
 class StrVec
 {
 public:
+    using size_type = std::string::size_type;
+    
     StrVec();
 
     StrVec(StrVec &sv);
 
     StrVec(StrVec &&sv);
 
+    friend bool operator==(const StrVec &, const StrVec &);
+
+    friend bool operator!=(const StrVec &, const StrVec &);
+    friend bool operator>(const StrVec &, const StrVec &);
+    friend bool operator<(const StrVec &, const StrVec &);
+
+    std::string *operator[](size_type);
+
     StrVec &operator=(StrVec &sv);
-    
+
     StrVec &operator=(StrVec &&sv);
 
     StrVec(std::initializer_list<std::string> li);
 
     ~StrVec();
 
-    using size_type = std::string::size_type;
-
-    size_type size()
+    size_type size() const
     {
         return first_free - elements;
     }
@@ -33,17 +41,21 @@ public:
     {
         return cap - elements;
     }
-    std::string *begin()
+    std::string *begin() const
     {
         return elements;
     }
 
-    std::string *end()
+    std::string *end() const
     {
         return first_free;
     }
 
-    void push_back(const std::string &s);
+    void push_back(const std::string &s) &;
+
+    void push_back(std::string &&s) &;
+
+    void push_back(std::string &s) &&;
 
 private:
     std::allocator<std::string> alloc;

@@ -43,6 +43,16 @@ String &String::operator=(String &&s)
     return *this;
 }
 
+std::ostream &operator<<(std::ostream &out, String &s)
+{
+    for (auto b = s.elements; b != s.end; b++)
+    {
+        out << *b;
+    }
+
+    return out;
+}
+
 pair<char *, char *> String::alloc_n_copy(const char *first, const char *last)
 {
     auto newData = alloc.allocate(last - first);

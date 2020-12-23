@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <iostream>
 
 class String
 {
@@ -13,6 +14,7 @@ public:
     String(String &);
     String(String &&);
 
+    friend std::ostream &operator<<(std::ostream &, String &);
     String &operator=(String &&);
     String &operator=(String &);
 
