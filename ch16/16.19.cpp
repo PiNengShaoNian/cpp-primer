@@ -1,0 +1,34 @@
+#include <iostream>
+#include <list>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+template <typename Container>
+std::ostream& print(Container const& container, ostream& os) {
+    for (typename Container::size_type i = 0; i != container.size(); ++i) {
+        os << container[i] << " ";
+    }
+
+    return os;
+}
+
+template <typename Container>
+std::ostream& print2(Container const& container, ostream& os) {
+    for (auto curr = container.cbegin(); curr != container.cend(); ++curr) {
+        os << *curr << " ";
+    }
+
+    return os;
+}
+
+int main() {
+    std::vector<int> v = {1, 23, 6, 4, 5, 7, 4};
+    std::list<std::string> l = {"ss", "sszz", "saaas", "s333s", "ss2", " sss"};
+    print(v, std::cout) << std::endl;
+    print2(v, std::cout) << std::endl;
+    print2(l, std::cout) << std::endl;
+
+    return 0;
+}
